@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Icon, Button, Text, ListItem, Avatar } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Image } from 'react-native';
+import * as Animatable from 'react-native-animatable';
 
 const Stack = createStackNavigator();
 
@@ -47,7 +48,13 @@ function AboutStack({navigation}){
                 style={styles.image}
                 source={{uri: "https://images-na.ssl-images-amazon.com/images/I/41Yy52TSN8L.jpg"}}
                 />
-                <Text h3 style={styles.h1}>TVXQ (東方神起)</Text>
+                <Animatable.View 
+                    animation="pulse" 
+                    easing="ease-out" 
+                    iterationCount="infinite" 
+                    style={styles.beat}>
+                    <Text h3 style={styles.h1}>TVXQ (東方神起)</Text>
+                </Animatable.View>
                 <Text style={styles.text} > 
                 Whether they’re known to you by the moniker TVXQ or DBSK, there’s no question that as a K-Pop fan, you’re at least familiar with the impact this group has left on K-Pop as a whole. Whether it be early domination of the industry or the first major reported company dispute and resulting split, you’ve certainly heard tales of the group. This month we’ll be taking a deep dive into TVXQ’s formation, dispute, and current whereabouts.
                 </Text>
@@ -64,7 +71,13 @@ function AboutStack({navigation}){
                 style={styles.image2}
                 source={{uri: "http://student-weekly.com/290615/PiX/TVXQ-3.jpg"}}
                 />
-                <Text h3 style={{...styles.h1, marginTop: 10}}>Cassiopeia</Text>
+                <Animatable.View 
+                animation="pulse" 
+                easing="ease-out" 
+                iterationCount="infinite" 
+                style={styles.beat}>
+                    <Text h3 style={{...styles.h1, marginTop: 10}}>Cassiopeia</Text>
+                </Animatable.View>
                 <Text style={styles.text} > 
                 Cassiopeia is the official fan club of South Korean band, TVXQ. It was named after the 5-starred constellation, Cassiopeia. Its counterpart in Japan is called BigEast. The fan club was formed on April 23  2006, a few years after the group’s debut. The official fanclub color is pearl red, signifying passion. April 23 is celebrated by fans as Cassiopeia Day as this is the day when the fanclub member registration initiated.
                 </Text>

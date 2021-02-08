@@ -6,6 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import * as firebase from 'firebase'
 const {useState, useEffect, useContext} = React
 import { UserContext } from "../store/UserContext"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function LogInForm({toggleFormView}) {
@@ -21,8 +22,25 @@ export default function LogInForm({toggleFormView}) {
     const [authUser, setAuthUser] = useContext(UserContext)
 
     const [buttonDisable, setButtonDisabled] = useState(false)
+    const [showLogin, setShowLogin] = useState(false)
+
+    const check = async()=>{
+        try {
+          const value = await AsyncStorage.getItem('@auth_user')
+          setShowLogin(true)
+          if(value !== null) {
+            setAuthUser(JSON.parse(value))
+          }
+        } catch(e) {
+        }
+    
+      }
+
+
 
     useEffect(() => {
+        check()
+
         const UsersRef = firebase.database().ref("/users");
 
         UsersRef.once('value', function(snapshot) {
@@ -48,6 +66,7 @@ export default function LogInForm({toggleFormView}) {
         users.forEach(user=>{
             if(user.userName == userName){
                 if(user.password == password){
+                    AsyncStorage.setItem('@auth_user', JSON.stringify(user))
                     setAuthUser(user)
                 }else{
                     setErrorPassword("Inccorect password")
@@ -83,6 +102,10 @@ export default function LogInForm({toggleFormView}) {
 
     const eyeHandler = ()=>{
         setShowEye((old)=>{return(!old)})
+    }
+
+    if(showLogin == false){
+        return null
     }
 
     return (

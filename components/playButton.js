@@ -4,6 +4,7 @@ import { Avatar, Button, Icon } from 'react-native-elements'
 import { Audio } from 'expo-av';
 import * as firebase from 'firebase'
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import * as Animatable from 'react-native-animatable';
 
 export default function playButton() {
     const [sound, setSound] = useState();
@@ -149,9 +150,11 @@ export default function playButton() {
                 size="medium"
                 source={albumCover}
                 />
+                
 
-                <View style={{paddingTop: 5}}>
-                    <Animated.View  style={{transform: [{rotate: spin}]}}>
+
+                <View style={styles.btn}>
+                    <Animated.View  style={{transform: [{rotate: spin}], zIndex: 5}}>
                         <TouchableOpacity
                         onPress={()=>{setNext((prev)=>{return prev+1})}}
                         style={styles.iconsContainer}
@@ -165,6 +168,22 @@ export default function playButton() {
                         </TouchableOpacity>
 
                     </Animated.View> 
+
+                    <Animatable.View 
+                    animation="pulse" 
+                    easing="ease-out" 
+                    iterationCount="infinite" 
+                    style={styles.beat}>
+                        <View></View>
+                    </Animatable.View>
+                    
+                    <Animatable.View 
+                    animation="pulse" 
+                    easing="ease-in" 
+                    iterationCount="infinite" 
+                    style={styles.beat2}>
+                        <View></View>
+                    </Animatable.View>
                 </View>               
             </View>
 
@@ -179,7 +198,7 @@ const styles = StyleSheet.create({
 
     upperLogos:{
         flexDirection: 'row-reverse',
-        width: 100,
+        width: 110,
         // backgroundColor: "blue",
         justifyContent: "space-between"
     },
@@ -200,5 +219,30 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40,
         borderRadius: 50,
+    },
+    btn:{
+        padding: 5, 
+        // backgroundColor: "blue", 
+        // opacity: 0
+    },
+    beat:{
+        position: "absolute",
+        top: -7.5,
+        left: -7.5,
+        width: 65,
+        height: 65,
+        backgroundColor: "white",
+        opacity: 0.1,
+        borderRadius: 50
+    },
+    beat2:{
+        position: "absolute",
+        top: -0,
+        left: 0,
+        width: 50,
+        height: 50,
+        backgroundColor: "white",
+        opacity: 0.1,
+        borderRadius: 50
     }
 })

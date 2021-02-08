@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { UserContext } from "../store/UserContext"
 import * as firebase from 'firebase'
+import * as Animatable from 'react-native-animatable'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -40,7 +41,7 @@ export default function ChatBox({route, navigation}) {
 
         usersRefs.child(authUser.id)
         .update({
-          imgURI: authUser.imgURI,
+          imgURI: authUser.imgURI?authUser.imgURI: "",
           password: authUser.password,
           userName: authUser.userName,
           onServer: server
@@ -85,37 +86,64 @@ export default function ChatBox({route, navigation}) {
                     {               
                         messages.map((message,i)=>{
                             return authUser.userName==message.from ?
-                                (<View key={i} style={{...styles.parentMessageContainer, ...styles.MeParentMessageContainer}}>
+                                (
+                                <Animatable.View 
+                                key={message.id}
+                                animation="bounceInRight" 
+                                easing="ease-out" 
+                                iterationCount={1} 
+                                style={{ textAlign: 'center' }}>
+                                    <View style={{...styles.parentMessageContainer, ...styles.MeParentMessageContainer}}>
                                     <View
                                     style={{...styles.messageContainer,...styles.MeContainer}}
                                     > 
                                         <Text style={{...styles.messageText, color:"black"}}>{message.msg}</Text>                                
                                     </View>
 
-                                </View>)
-                                :
-                                (<View key={i} style={styles.parentMessageContainer}>
-                                    <Avatar
-                                    rounded
-                                    source={{uri: message.imgURI}}
-                                    size={38}
-                                    />
-                                    <View style={styles.msgContainer}>
-                                        <Text style={{fontSize: 12, color: 'grey'}}>
-                                            {message.from}
-                                        </Text>
-                                        <LinearGradient
-                                        colors={['#e13f3c', '#ea8756']}
-                                        style={styles.messageContainer}
-                                        start={{x: 0, y:0}}
-                                        end={{x: 0.5, y: 0.9}}
-                                        > 
-                                            <Text style={styles.messageText}>{message.msg}</Text>                                
-                                        </LinearGradient>
                                     </View>
+                                </Animatable.View>
+                                )
+                                :
+                                (
+                                <Animatable.View 
+                                key={i}
+                                animation="bounceInLeft" 
+                                easing="ease-out" 
+                                iterationCount={1} 
+                                style={{ textAlign: 'center' }}>
+                                    <View style={styles.parentMessageContainer}>
+                                        {
+                                             message.imgURI!=""?
+                                             (<Avatar
+                                            rounded
+                                            source={{uri: message.imgURI}}
+                                            size={38}/>):
+                                            (<Avatar
+                                            rounded
+                                            containerStyle={{backgroundColor:"grey"}}
+                                            title={(message.from.split("")[0] +message.from.split("")[1]).toUpperCase()}
+                                            size={38}/>
+                                            )
+                                        }
+                                        
+                                        
+                                        <View style={styles.msgContainer}>
+                                            <Text style={{fontSize: 12, color: 'grey'}}>
+                                                {message.from}
+                                            </Text>
+                                            <LinearGradient
+                                            colors={['#e13f3c', '#ea8756']}
+                                            style={styles.messageContainer}
+                                            start={{x: 0, y:0}}
+                                            end={{x: 0.5, y: 0.9}}
+                                            > 
+                                                <Text style={styles.messageText}>{message.msg}</Text>                                
+                                            </LinearGradient>
+                                        </View>
 
 
-                                </View>)
+                                    </View>
+                                </Animatable.View>)
                         })
                     }
                 </ScrollView>

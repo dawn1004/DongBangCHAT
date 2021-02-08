@@ -6,6 +6,7 @@ import { UserContext } from "../store/UserContext"
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as firebase from 'firebase'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const Stack = createStackNavigator();
 
@@ -99,6 +100,13 @@ function SettingStack({navigation}){
     // }
 
     const uploadHandler = async()=>{
+      
+      if(ImagePick==null){
+        alert('Please select image')
+        return
+      }
+
+
       setProgress(true)
       console.log("uploadAsFile", ImagePick)
       const response = await fetch(ImagePick);
@@ -145,6 +153,7 @@ function SettingStack({navigation}){
                   setAuthUser(temp)
                   setProgress(false)
                   alert("DP Successfully Updated")
+                  setImagePick(null)
                 }) 
                 console.log(url)
               })
@@ -180,7 +189,7 @@ function SettingStack({navigation}){
 
       usersRefs.child(authUser.id)
       .update({
-        imgURI: authUser.imgURI,
+        imgURI: authUser.imgURI? authUser.imgURI: "",
         password: newPassword,
         userName: authUser.userName
       }, ()=>{
@@ -221,28 +230,53 @@ function SettingStack({navigation}){
               {
                 authUser.imgURI?
                 (
-                  <Avatar
+                  <TouchableOpacity 
                   onPress={pickImage} 
-                  rounded
-                  title="MD"
-                  size="large"
-                  containerStyle={{backgroundColor: "grey"}}
-                  source={ImagePick?
-                    {uri: ImagePick}:
-                    {uri: authUser.imgURI}
-                    
-                  }
-                  />
+                  style={styles.imageBG}> 
+                    <Icon
+                    containerStyle={styles.changeDp}
+                    type= 'font-awesome'
+                    name='pencil'
+                    size={40}
+                    color={ImagePick?'transparent':'white'}
+                    />  
+                    <Avatar
+                    rounded
+                    title="MD"
+                    size="large"
+                    containerStyle={{backgroundColor: "grey"}}
+                    source={ImagePick?
+                      {uri: ImagePick}:
+                      {uri: authUser.imgURI}
+                    }
+                    />                    
+                  </TouchableOpacity>
+
                 ):
                 (
-                  <Avatar
+                  <TouchableOpacity 
                   onPress={pickImage} 
-                  rounded
-                  title={(authUser.userName.split("")[0] +authUser.userName.split("")[1]).toUpperCase()}
-                  size="large"
-                  containerStyle={{backgroundColor: "grey"}}
-                  titleStyle={{color:"white"}}
-                  />            
+                  style={styles.imageBG}> 
+                    <Icon
+                    containerStyle={styles.changeDp}
+                    type= 'font-awesome'
+                    name='pencil'
+                    size={40}
+                    color={ImagePick?'transparent':'black'}
+                    />  
+                    <Avatar
+                    onPress={pickImage} 
+                    rounded
+                    title={(authUser.userName.split("")[0] +authUser.userName.split("")[1]).toUpperCase()}
+                    size="large"
+                    containerStyle={{backgroundColor: "grey"}}
+                    titleStyle={{color:"white"}}
+                    source={ImagePick?
+                      {uri: ImagePick}:
+                      null
+                    }
+                    />
+                  </TouchableOpacity>            
                 )
               }
 
@@ -357,5 +391,14 @@ const styles = StyleSheet.create({
   },
   username:{
     width: 200,
+  },
+  imageBG:{
+    alignItems: "center",
+    justifyContent: 'center'
+  },
+  changeDp:{
+    position: "absolute",
+    zIndex: 3,
+    opacity: 0.7
   }
 });

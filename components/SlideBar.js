@@ -4,11 +4,13 @@ import { Avatar, Image, Icon, Button } from 'react-native-elements';
 import {  BackHandler, View, Text, ScrollView, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
 import {Container, Header, Footer, Content, Right, Center, Left, Thumbnail, ListItem} from 'native-base'
 import {UserContext} from '../store/UserContext'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Sidebar({...props}){
     const [authUser, setAuthUser] = useContext(UserContext)
 
-    const logoutHandler = ()=>{
+    const logoutHandler = async()=>{
+        await AsyncStorage.removeItem('@auth_user')
         setAuthUser(null)
     }
 

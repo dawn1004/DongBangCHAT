@@ -7,6 +7,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import SignUpForm from '../components/SignUpForm'
 import LogInForm from '../components/LogInForm';
 
+
 const {useState, useEffect} = React;
 const Stack = createStackNavigator();
 

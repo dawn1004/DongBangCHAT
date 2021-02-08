@@ -1,7 +1,9 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { View, StyleSheet } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack';
 import { Icon, Button, Text, ListItem, Avatar } from 'react-native-elements';
+import * as Animatable from 'react-native-animatable';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const Stack = createStackNavigator();
 
@@ -37,7 +39,8 @@ export default function AboutScreen({ navigation }) {
       );
 }
 
-const list = [
+
+const infos =[
   {
     name: 'Dawn Lemuel Bugay',
     avatar_url: 'https://scontent.fmnl25-1.fna.fbcdn.net/v/t1.0-9/105009081_2836110856616508_807291393452165952_o.jpg?_nc_cat=105&ccb=2&_nc_sid=09cbfe&_nc_eui2=AeFTNa0V2HYCa-2gp2NAIMAiGnURKZ8Sb84adREpnxJvzswqa-SH1rO-THjMVBiNNlaysEVcr1j2P3t68cQ8K0HN&_nc_ohc=virQwGVHlcMAX93aqwc&_nc_ht=scontent.fmnl25-1.fna&oh=7df918c4c12cda14e68022ed5f7f7f2d&oe=6044F06F',
@@ -65,7 +68,29 @@ const list = [
   }
 ]
 
+
 function AboutStack({navigation}){
+
+    const [list, setList] = useState([])
+
+    useEffect(() => {
+      const unsubscribe = navigation.addListener('focus', () => {
+        setList([])
+        infos.forEach((info,i)=>{
+          setTimeout(() => {
+            setList(prev=>{
+              return prev.concat([info])
+            })
+          }, i*450);          
+        })
+
+
+      });
+      return unsubscribe
+    }, [navigation])
+
+
+
     return(
         <View style={styles.container}>
             <Text h3 style={{marginBottom: 6}}>About the app</Text>
@@ -78,13 +103,21 @@ function AboutStack({navigation}){
 
             {
               list.map((l, i) => (
-                <ListItem key={i} bottomDivider>
-                  <Avatar source={{uri: l.avatar_url}} />
-                  <ListItem.Content>
-                    <ListItem.Title>{l.name}</ListItem.Title>
-                    <ListItem.Subtitle>{l.subtitle}</ListItem.Subtitle>
-                  </ListItem.Content>
-                </ListItem>
+                <Animatable.View 
+                key={i}
+                animation="fadeInUp"
+                duration={800} 
+                easing="ease-out" 
+                iterationCount="1" 
+                style={styles.beat}>
+                  <ListItem bottomDivider>
+                    <Avatar source={{uri: l.avatar_url}} />
+                    <ListItem.Content>
+                      <ListItem.Title>{l.name}</ListItem.Title>
+                      <ListItem.Subtitle>{l.subtitle}</ListItem.Subtitle>
+                    </ListItem.Content>
+                  </ListItem>
+                </Animatable.View>
               ))
             }
         </View>
